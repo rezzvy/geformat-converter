@@ -1,0 +1,17 @@
+p {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+#output-box {
+  height: 400px;
+}
+
+@media (max-width: 768px) {
+  #output-box {
+    height: 200px;
+  }
+}
