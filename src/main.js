@@ -146,6 +146,10 @@ conversionForm.addEventListener("submit", (e) => {
 
   conversionFormSubmitButton.value = "Converting";
   conversionFormSubmitButton.disabled = true;
+  conversionFormResetButton.disabled = true;
+  formatSelectionElement.disabled = true;
+  inputRangeElement.disabled = true;
+  downloadButton.classList.add("disabled");
 
   img.src = URL.createObjectURL(selectedFile);
   img.onload = function () {
@@ -171,6 +175,8 @@ conversionForm.addEventListener("submit", (e) => {
           const originalFileName = selectedFile.name.split(".")[0];
           const newExtension = formData.get("format-selection");
 
+          formatSelectionElement.disabled = false;
+          inputRangeElement.disabled = false;
           conversionFormResetButton.disabled = false;
 
           downloadButton.download = `${originalFileName}.${newExtension}`;
