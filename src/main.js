@@ -17,6 +17,8 @@ const successAlertFormat = successAlert.querySelector("span");
 
 const downloadButton = document.getElementById("download-btn");
 
+let inputBoxTextContent = "";
+
 let selectedFile = "";
 let generatedBlobUrl = "";
 
@@ -25,7 +27,18 @@ const conversionDelay = 500;
 // Functions
 function fileHandler(event, source) {
   const file = source === "drop" ? event.dataTransfer.files[0] : event.target.files[0];
-  if (!file.type.startsWith("image/")) return console.error("Invalid selected file!");
+
+  if (!file.type.startsWith("image/")) {
+    inputBoxElement.textContent = "Selected file is not an image!";
+    inputBoxElement.classList.add("border-danger", "text-danger");
+
+    setTimeout(() => {
+      inputBoxElement.textContent = "Click this box to select an image, or simply drag and drop it here.";
+      inputBoxElement.classList.remove("border-primary", "text-primary", "border-danger", "text-danger");
+    }, 1000);
+
+    return console.error("Invalid selected file!");
+  }
 
   clearGeneratedBlobUrl();
   selectedFile = file;
@@ -33,6 +46,10 @@ function fileHandler(event, source) {
   formatSelectionElement.disabled = false;
   inputRangeElement.disabled = false;
   conversionFormSubmitButton.disabled = false;
+
+  inputBoxElement.classList.add("border-primary", "text-primary");
+  inputBoxElement.textContent = `Selected file : ${file.name}`;
+  inputBoxTextContent = inputBoxElement.textContent;
 }
 
 function clearGeneratedBlobUrl() {
@@ -44,15 +61,29 @@ function clearGeneratedBlobUrl() {
 // Event listeners
 inputBoxElement.addEventListener("dragover", (e) => {
   e.preventDefault();
+
+  if (inputBoxTextContent === "") {
+    inputBoxTextContent = e.currentTarget.textContent;
+  }
+
   e.currentTarget.classList.add("border-primary", "text-primary");
+  e.currentTarget.textContent = "Drop it here!";
 });
 inputBoxElement.addEventListener("dragleave", (e) => {
   e.preventDefault();
-  e.currentTarget.classList.remove("border-primary", "text-primary");
+
+  e.currentTarget.textContent = inputBoxTextContent;
+
+  if (selectedFile === "") {
+    e.currentTarget.classList.remove("border-primary", "text-primary");
+  }
+
+  if (inputBoxTextContent !== "") {
+    inputBoxTextContent = "";
+  }
 });
 inputBoxElement.addEventListener("drop", (e) => {
   e.preventDefault();
-  e.currentTarget.classList.add("border-primary", "text-primary");
   fileHandler(e, "drop");
 });
 
@@ -94,6 +125,9 @@ conversionForm.addEventListener("reset", (e) => {
   inputRangeElement.disabled = true;
 
   conversionFormSubmitButton.value = "Convert";
+
+  inputBoxElement.classList.remove("border-primary", "text-primary");
+  inputBoxElement.textContent = "Click this box to select an image, or simply drag and drop it here.";
 
   downloadButton.href = "javascript:void(0)";
   downloadButton.removeAttribute("download");
