@@ -131,6 +131,8 @@ conversionForm.addEventListener("reset", (e) => {
 
   downloadButton.href = "javascript:void(0)";
   downloadButton.removeAttribute("download");
+
+  inputFileElement.value = "";
 });
 
 conversionForm.addEventListener("submit", (e) => {
