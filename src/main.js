@@ -5,9 +5,12 @@ const outputBoxElement = document.getElementById("output-box");
 const outputBoxImg = outputBoxElement.querySelector("img");
 
 const conversionForm = document.getElementById("conversion-form");
-
 const inputRangeElement = document.getElementById("input-range");
 const inputRangeIndicator = document.getElementById("input-range-indicator");
+const formatSelectionElement = document.getElementById("format-selection");
+
+const conversionFormSubmitButton = document.getElementById("submit-btn");
+const conversionFormResetButton = document.getElementById("reset-btn");
 
 const successAlert = document.getElementById("success-alert");
 const successAlertFormat = successAlert.querySelector("span");
@@ -17,6 +20,8 @@ const downloadButton = document.getElementById("download-btn");
 let selectedFile = "";
 let generatedBlobUrl = "";
 
+const conversionDelay = 500;
+
 // Functions
 function fileHandler(event, source) {
   const file = source === "drop" ? event.dataTransfer.files[0] : event.target.files[0];
@@ -24,6 +29,10 @@ function fileHandler(event, source) {
 
   clearGeneratedBlobUrl();
   selectedFile = file;
+
+  formatSelectionElement.disabled = false;
+  inputRangeElement.disabled = false;
+  conversionFormSubmitButton.disabled = false;
 }
 
 function clearGeneratedBlobUrl() {
@@ -55,8 +64,20 @@ inputFileElement.addEventListener("change", (e) => {
   fileHandler(e, "input");
 });
 
+formatSelectionElement.addEventListener("input", (e) => {
+  if (conversionFormSubmitButton.disabled) {
+    conversionFormSubmitButton.disabled = false;
+    conversionFormSubmitButton.value = "Convert Again";
+  }
+});
+
 inputRangeElement.addEventListener("input", (e) => {
   inputRangeIndicator.textContent = e.currentTarget.value;
+
+  if (conversionFormSubmitButton.disabled) {
+    conversionFormSubmitButton.disabled = false;
+    conversionFormSubmitButton.value = "Convert Again";
+  }
 });
 
 conversionForm.addEventListener("reset", (e) => {
@@ -64,6 +85,15 @@ conversionForm.addEventListener("reset", (e) => {
   inputRangeIndicator.textContent = "1";
   outputBoxImg.src = "#";
   outputBoxImg.classList.replace("d-block", "d-none");
+  successAlert.classList.replace("d-block", "d-none");
+  downloadButton.classList.add("disabled");
+
+  conversionFormSubmitButton.disabled = true;
+  conversionFormResetButton.disabled = true;
+  formatSelectionElement.disabled = true;
+  inputRangeElement.disabled = true;
+
+  conversionFormSubmitButton.value = "Convert";
 
   downloadButton.href = "javascript:void(0)";
   downloadButton.removeAttribute("download");
@@ -77,6 +107,10 @@ conversionForm.addEventListener("submit", (e) => {
 
   const formData = new FormData(e.currentTarget);
   const img = document.createElement("img");
+
+  conversionFormSubmitButton.value = "Converting";
+  conversionFormSubmitButton.disabled = true;
+
   img.src = URL.createObjectURL(selectedFile);
   img.onload = function () {
     const canvas = document.createElement("canvas");
@@ -89,19 +123,28 @@ conversionForm.addEventListener("submit", (e) => {
 
     canvas.toBlob(
       (blob) => {
-        generatedBlobUrl = URL.createObjectURL(blob);
-        outputBoxImg.classList.replace("d-none", "d-block");
-        outputBoxImg.src = generatedBlobUrl;
+        setTimeout(() => {
+          generatedBlobUrl = URL.createObjectURL(blob);
+          successAlert.classList.replace("d-none", "d-block");
 
-        downloadButton.href = generatedBlobUrl;
+          outputBoxImg.classList.replace("d-none", "d-block");
+          outputBoxImg.src = generatedBlobUrl;
 
-        const originalFileName = selectedFile.name.split(".")[0];
-        const newExtension = formData.get("format-selection");
+          downloadButton.href = generatedBlobUrl;
 
-        downloadButton.download = `${originalFileName}.${newExtension}`;
-        successAlertFormat.textContent = formData.get("format-selection");
+          const originalFileName = selectedFile.name.split(".")[0];
+          const newExtension = formData.get("format-selection");
 
-        URL.revokeObjectURL(img.src);
+          conversionFormResetButton.disabled = false;
+
+          downloadButton.download = `${originalFileName}.${newExtension}`;
+          downloadButton.classList.remove("disabled");
+
+          successAlertFormat.textContent = formData.get("format-selection");
+          conversionFormSubmitButton.value = "Convert";
+
+          URL.revokeObjectURL(img.src);
+        }, conversionDelay);
       },
       `image/${formData.get("format-selection")}`,
       parseFloat(formData.get("quality-range"))
