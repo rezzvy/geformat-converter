@@ -94,8 +94,9 @@ export default class Controller {
   // Handle form reset, clear all data
   #conversionResetHandler() {
     this.model.clearObjectURL(); // Clear object URL
+    this.model.file = ""; // Clear file property in the model
 
-    this.view.clearInputFileValue(); // Clear file input
+    this.view.clearInputFileValue(); // Clear the file input value in the form (not the model's file property)
     this.view.displayElements(false, ["outputBoxImg", "successAlert"]); // Hide output and success alert
     this.view.highlightInputBox(false, ["border-primary", "text-primary"]); // Remove highlight
     this.view.enableControls(false, [
