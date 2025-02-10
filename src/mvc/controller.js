@@ -124,7 +124,7 @@ export default class Controller {
 
     const tempImg = URL.createObjectURL(this.model.file); // Create object URL for selected file
 
-    this.view.setConvertButtonText("Converting"); // Update button text
+    this.view.setConvertButtonText("Processing"); // Update button text
 
     // Disable form controls during conversion
     this.view.enableControls(false, [
@@ -144,7 +144,7 @@ export default class Controller {
             this.model.objectURL = URL.createObjectURL(blob); // Generate object URL for converted image
 
             // Re-enable controls and update view with results
-            this.view.setConvertButtonText("Convert");
+            this.view.setConvertButtonText("Execute");
             this.view.enableControls(true, ["formatSelectionElement", "inputRangeElement", "conversionFormResetButton", "downloadButton"]);
             this.view.setOutputImageSource(this.model.objectURL);
             this.view.setAlertSuccessFormat(format);
@@ -168,7 +168,7 @@ export default class Controller {
   #convertAgainStateHandler() {
     if (this.view.conversionFormSubmitButton.disabled) {
       this.view.enableControls(true, ["conversionFormSubmitButton"]);
-      this.view.setConvertButtonText("Convert Again");
+      this.view.setConvertButtonText("Execute Again");
     }
   }
 }

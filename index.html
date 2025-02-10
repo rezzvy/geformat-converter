@@ -18,17 +18,17 @@
     <div class="container-lg my-2 my-md-4">
       <header>
         <div class="_wrapper text-center">
-          <h1 class="h2 fw-bold text-primary text-uppercase">GeFormat Converter</h1>
-          <p class="lead">Web-based app to convert image formats to JPG, PNG, and WebP.</p>
+          <h1 class="h3 fw-bold text-primary text-uppercase mb-0">GeFormat Converter</h1>
+          <p class="lead mb-0">Web-based app to convert/compress image formats to JPG, PNG, and WebP.</p>
         </div>
       </header>
 
       <main>
-        <div class="_wrapper p-4 my-2 my-md-4 bg-white rounded-2 shadow-sm">
+        <div class="_wrapper p-4 my-2 my-md-4 bg-white border">
           <div class="row g-4">
             <div class="col-12 col-md-8">
               <section class="mb-3">
-                <h2 class="h4">Input</h2>
+                <h2 class="h5">Input</h2>
                 <p id="input-box" class="p-3 border rounded-2 text-break" role="button">
                   Click this box to select an image, or simply drag and drop it here.
                 </p>
@@ -36,7 +36,7 @@
               </section>
 
               <section>
-                <h2 class="h4">Output</h2>
+                <h2 class="h5">Output</h2>
                 <p id="success-alert" class="d-none alert alert-success mb-0">Successfully converted your image to <span>{null}</span> format</p>
                 <div id="output-box" class="my-2 bg-body-secondary rounded-2">
                   <img src="" class="d-none p-2 p-md-4" />
@@ -47,32 +47,37 @@
 
             <div class="col-12 col-md-4">
               <section class="position-sticky top-0">
-                <h2 class="h4">Conversion</h2>
+                <h2 class="h5">Conversion</h2>
 
                 <form id="conversion-form">
                   <div class="mb-2">
                     <label class="form-label">Format</label>
                     <select id="format-selection" class="form-select" name="format-selection" disabled>
-                      <option value="jpeg" selected>JPG</option>
+                      <option value="jpeg">JPG</option>
                       <option value="png">PNG</option>
-                      <option value="webp">WebP</option>
+                      <option value="webp" selected>WebP</option>
                     </select>
                   </div>
 
                   <div>
-                    <div>
-                      <label class="form-label">Quality</label>
-                      <div id="input-range-indicator" class="badge text-bg-primary">1</div>
-                    </div>
-
                     <p class="alert alert-primary mb-2">
                       Quality can only be adjusted for JPG and WEBP. PNG is lossless, so its quality can't be changed.
                     </p>
 
-                    <input id="input-range" type="range" class="form-range" name="quality-range" min="0" max="1" step="0.1" value="1" disabled />
+                    <p class="alert alert-primary mb-2">
+                      WebP with quality set to 0.9 is a balanced preset for image compression. If you just need to compress an image, you can leave
+                      the default settings.
+                    </p>
+
+                    <div>
+                      <label class="form-label">Quality</label>
+                      <div id="input-range-indicator" class="badge text-bg-primary">0.9</div>
+                    </div>
+
+                    <input id="input-range" type="range" class="form-range" name="quality-range" min="0" max="1" step="0.1" value="0.9" disabled />
                   </div>
 
-                  <input id="submit-btn" type="submit" class="btn btn-primary fw-bold w-100 d-block mb-1" value="Convert" disabled />
+                  <input id="submit-btn" type="submit" class="btn btn-primary fw-bold w-100 d-block mb-1" value="Execute" disabled />
                   <input id="reset-btn" type="reset" class="btn btn-outline-danger fw-bold w-100 d-block" value="Reset" disabled />
                 </form>
               </section>
@@ -83,7 +88,7 @@
 
       <footer>
         <div class="_wrapper text-center">
-          <p>Made with lots of love by <a href="https://github.com/rezzvy" class="fw-bold">Muhammad Reza Fahlevi</a></p>
+          <p>Made with lots of love by <a href="https://github.com/rezzvy" class="fw-bold">rezzvy</a></p>
         </div>
       </footer>
     </div>
